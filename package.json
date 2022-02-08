@@ -52,6 +52,7 @@
     "react-draft-wysiwyg": "~1.13.2",
     "react-select": "^3.2.0",
     "react-signature-canvas": "^1.0.3",
+    "react-tabs": "^3.2.3",
     "react-textarea-autosize": "^7.1.2",
     "xss": "^1.0.8"
   },

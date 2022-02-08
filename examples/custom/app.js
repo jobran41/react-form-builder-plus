@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
+
 import { ReactFormBuilder, ElementStore, Registry } from 'react-form-builder2';
 import DemoBar from './demobar';
 import * as variables from './variables';
@@ -9,6 +12,20 @@ const getUrl = (cid) => `https://safe-springs-35306.herokuapp.com/api/formdata?c
 
 const TestComponent = () => <h2>Hello</h2>;
 
+const TabsComponent = (children) => <Tabs>
+<TabList>
+  <Tab>Title 1</Tab>
+  <Tab>Title 2</Tab>
+</TabList>
+
+<TabPanel>
+  <h2>Any content 1</h2>
+</TabPanel>
+<TabPanel>
+  <h2>Any content 2</h2>
+</TabPanel>
+</Tabs>;
+
 const MyInput = React.forwardRef((props, ref) => {
   const { name, defaultValue, disabled } = props;
   return <input ref={ref} name={name} defaultValue={defaultValue} disabled={disabled} />;
@@ -16,6 +33,7 @@ const MyInput = React.forwardRef((props, ref) => {
 
 Registry.register('MyInput', MyInput);
 Registry.register('TestComponent', TestComponent);
+Registry.register('TabsComponent', TabsComponent);
 
 const items = [{
   key: 'Header',
@@ -53,7 +71,20 @@ const items = [{
   icon: 'fa fa-cog',
   props: { test: 'test_input' },
   label: 'Label Input',
-}];
+  },
+  {
+    key: 'TabsComponent',
+    element: 'CustomElement',
+    component: TabsComponent,
+    type: 'custom',
+    forwardRef: true,
+    field_name: 'my_tabs_',
+    name: 'My Tabs',
+    icon: 'fa fa-cog',
+    props: { test: 'test_input' },
+    label: 'Label Input',
+    }
+];
 
 class App extends React.Component {
   constructor(props) {

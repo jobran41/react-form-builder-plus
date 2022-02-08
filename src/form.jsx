@@ -5,6 +5,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { EventEmitter } from 'fbemitter';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+
 import FormValidator from './form-validator';
 import FormElements from './form-elements';
 import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from './multi-column';
@@ -352,8 +354,22 @@ export default class ReactForm extends React.Component {
       display: 'none',
     };
 
+    const findTabs = items.find(d => d.type.name === `TwoColumnRow`)
+    
+    console.log('findTabs :>> ', findTabs);
+
     const backName = (this.props.back_name) ? this.props.back_name : 'Cancel';
 
+const tabs=  <Tabs>
+<TabList>
+  <Tab>Title 1</Tab>
+  <Tab>Title 2</Tab>
+</TabList>
+
+  {findTabs.props.controls.map(el=><TabPanel>{el}</TabPanel>)}
+
+</Tabs>
+    items.push(tabs)
     return (
       <div>
         <FormValidator emitter={this.emitter} />
