@@ -46,9 +46,11 @@ const store = new Store({
     },
 
     updateOrder(context, elements) {
+      console.log('context, elements :>> ', context, elements);
       const newData = elements.filter(x => x && !x.parentId);
+      console.log('newData :>> ', newData,elements);
       elements.filter(x => x && x.parentId).forEach(x => newData.push(x));
-      // console.log('setAsChild', newData);
+
       this.setData(context, newData, true);
     },
 

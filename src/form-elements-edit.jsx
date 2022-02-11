@@ -22,6 +22,7 @@ const toolbar = {
 export default class FormElementsEdit extends React.Component {
   constructor(props) {
     super(props);
+    
     this.state = {
       element: this.props.element,
       data: this.props.data,
@@ -49,15 +50,31 @@ export default class FormElementsEdit extends React.Component {
 
   onEditorStateChange(index, property, editorContent) {
     // const html = draftToHtml(convertToRaw(editorContent.getCurrentContent())).replace(/<p>/g, '<div>').replace(/<\/p>/g, '</div>');
-    const html = draftToHtml(convertToRaw(editorContent.getCurrentContent())).replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/&nbsp;/g, ' ')
+    if (property === `text`) {
+      const this_element = this.state.element;
+      this_element[property] = editorContent.target.value;
+      this.setState({
+        element: this_element,
+        dirty: true,
+      });
+    } else if (property === `childName`) {
+      const this_element = this.state.element;
+      this_element[property][index] = editorContent.target.value;
+      this.setState({
+        element: this_element,
+        dirty: true,
+      });
+    }
+    else {
+      const html = draftToHtml(convertToRaw(editorContent.getCurrentContent())).replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/&nbsp;/g, ' ')
       .replace(/(?:\r\n|\r|\n)/g, ' ');
     const this_element = this.state.element;
     this_element[property] = html;
-
     this.setState({
       element: this_element,
       dirty: true,
     });
+    }
   }
 
   updateElement() {
@@ -132,13 +149,25 @@ export default class FormElementsEdit extends React.Component {
     if (this.props.element.hasOwnProperty('label')) {
       editorState = this.convertFromHTML(this.props.element.label);
     }
-
+console.log('this.state.element :>> ', this.state.element);
     return (
       <div>
         <div className="clearfix">
-          <h4 className="float-left">{this.props.element.text}</h4>
+          <h4 className="float-left">
+            {this.props.element.text}
+            <input id="labelName" type="text" className="form-control" defaultValue={this.props.element.text}
+              onChange={this.onEditorStateChange.bind(this, 0, 'text')} />
+          </h4>
           <i className="float-right fas fa-times dismiss-edit" onClick={this.props.manualEditModeOff}></i>
         </div>
+        {this.state.element.childNames && this.state.element.childNames.map((el, i) => {
+
+          return <div>
+            <label>Tabs {i}</label>
+            <input id="labelName" type="text" className="form-control" defaultValue={el}
+          onChange={this.onEditorStateChange.bind(this, i, 'childNames')} /></div>
+        }
+          )}
         { this.props.element.hasOwnProperty('content') &&
           <div className="form-group">
             <label className="control-label">Text to display:</label>

@@ -9,7 +9,11 @@ export default class PlaceHolder extends React.Component {
     const placeHolderClass = this.props.show ? PLACE_HOLDER : PLACE_HOLDER_HIDDEN;
     const placeHolder = this.props.show ? this.props.text : '';
     return (
-      <div className={placeHolderClass} >
+      <div
+        style={{
+          height:'200px'
+        }}
+        className={placeHolderClass} >
         <div>{placeHolder}</div>
       </div>
     );

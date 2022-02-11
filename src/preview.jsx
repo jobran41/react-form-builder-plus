@@ -89,7 +89,7 @@ export default class Preview extends React.Component {
 
   _onChange(data) {
     const answer_data = {};
-
+    console.log('preview com from store :>> ', data);
     data.forEach((item) => {
       if (item && item.readOnly && this.props.variables[item.variableKey]) {
         answer_data[item.field_name] = this.props.variables[item.variableKey];
@@ -115,6 +115,7 @@ export default class Preview extends React.Component {
   }
 
   getDataById(id) {
+    console.log('id getDataById:>> ', id);
     const { data } = this.state;
     return data.find(x => x && x.id === id);
   }
@@ -138,15 +139,24 @@ export default class Preview extends React.Component {
     return true;
   }
 
-  setAsChild(item, child, col) {
+  setAsChild(item, child, col,lig) {
     const { data } = this.state;
     if (this.swapChildren(data, item, child, col)) {
       return;
     }
+    console.log('item, child, col ,lig :>> ', item, child, col,lig);
     const oldParent = this.getDataById(child.parentId);
     const oldCol = child.col;
+    if (item.childNames && Array.isArray(item.childNames)) {
+      const newArray = item.childItems[col]
+      newArray.splice(lig,1,child.id)
+      item.childItems[col] = newArray;
+      child.col = col;
+     } else {
+      item.childItems[col] = child.id; child.col = col;
+    } 
     // eslint-disable-next-line no-param-reassign
-    item.childItems[col] = child.id; child.col = col;
+   
     // eslint-disable-next-line no-param-reassign
     child.parentId = item.id;
     // eslint-disable-next-line no-param-reassign
@@ -242,6 +252,7 @@ export default class Preview extends React.Component {
         item.component = this.props.registry.get(item.key);
       }
     }
+    console.log('getElement :>> ', item, index);
     const SortableFormElement = SortableFormElements[item.element];
 
     if (SortableFormElement === null) {

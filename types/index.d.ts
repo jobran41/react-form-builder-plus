@@ -102,6 +102,7 @@ export type TaskData = BaseElement &
 export type FormBuilderLayout = {
   isContainer: true;
   childItems: TaskData[];
+  childNames: string[];
   field_name: string;
 };
 export type FormBuilderPostData = {

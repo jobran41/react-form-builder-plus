@@ -13,7 +13,7 @@ class MultiColumnRow extends React.Component {
     const {
       controls, data, editModeOn, getDataById, setAsChild, removeChild, seq, className, index,
     } = this.props;
-    const { childItems, pageBreakBefore } = data;
+    const { childItems, pageBreakBefore,childNames } = data;
     let baseClasses = 'SortableItem rfb-item';
     if (pageBreakBefore) { baseClasses += ' alwaysbreak'; }
 
@@ -23,8 +23,28 @@ class MultiColumnRow extends React.Component {
         <div>
           <ComponentLabel {...this.props} />
           <div className="row">
-            {childItems.map((x, i) => (
-              <div key={`${i}_${x || '_'}`} className={className}>{
+            {childNames ? childItems.map((de,l) => {
+              return de && de.map((x, i) => {
+                return <div key={`${i}_${x || '_'}`} className={className}>{
+                  controls ? controls[l][i] :
+                    <Dustbin
+                      style={{ width: '100%' }}
+                      data={data}
+                      accepts={accepts}
+                      items={childItems}
+                      col={i}
+                      lig={l}
+                      parentIndex={index}
+                      editModeOn={editModeOn}
+                      _onDestroy={() => removeChild(data, i)}
+                      getDataById={getDataById}
+                      setAsChild={setAsChild}
+                      seq={seq}
+                    />}
+                </div>
+              })
+            }) : childItems.map((x, i) => {
+              return <div key={`${i}_${x || '_'}`} className={className}>{
                 controls ? controls[i] :
                   <Dustbin
                     style={{ width: '100%' }}
@@ -39,7 +59,8 @@ class MultiColumnRow extends React.Component {
                     setAsChild={setAsChild}
                     seq={seq}
                   />}
-              </div>))}
+              </div>
+            }) }
           </div>
         </div>
       </div>
@@ -51,7 +72,8 @@ const TwoColumnRow = ({ data, class_name, ...rest }) => {
   const className = class_name || 'col-md-6';
   if (!data.childItems) {
     // eslint-disable-next-line no-param-reassign
-    data.childItems = [null, null]; data.isContainer = true;
+    data.childItems = [[null,null,null], [null,null,null]]; data.isContainer = true;
+    data.childNames = [null, null];
   }
   return (
     <MultiColumnRow {...rest} className={className} data={data} />
@@ -60,6 +82,7 @@ const TwoColumnRow = ({ data, class_name, ...rest }) => {
 
 const ThreeColumnRow = ({ data, class_name, ...rest }) => {
   const className = class_name || 'col-md-4';
+
   if (!data.childItems) {
     // eslint-disable-next-line no-param-reassign
     data.childItems = [null, null, null]; data.isContainer = true;

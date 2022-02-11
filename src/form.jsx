@@ -244,7 +244,10 @@ export default class ReactForm extends React.Component {
   }
 
   getInputElement(item) {
-    if (item.custom) {
+    if (item === undefined) {
+      return 
+    }
+    if (item && item.custom) {
       return this.getCustomElement(item);
     }
     const Input = FormElements[item.element];
@@ -259,7 +262,13 @@ export default class ReactForm extends React.Component {
   }
 
   getContainerElement(item, Element) {
-    const controls = item.childItems.map(x => (x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>));
+/*     const controls = item.childItems.map(x => (x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>));  
+ */
+    const controls = item.childNames ? item.childItems.map(el => el && el.map(x => {
+      return x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>
+    })) :item.childItems.map(x => (x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>));
+
+    console.log('controls controlscontrolscontrolscontrols :>> ', controls);
     return (<Element mutable={true} key={`form_${item.id}`} data={item} controls={controls} />);
   }
 
@@ -268,7 +277,7 @@ export default class ReactForm extends React.Component {
     return (<Element mutable={true} key={`form_${item.id}`} data={item} />);
   }
 
-  getCustomElement(item) {
+  getCustomElement(item) {z
     if (!item.component || typeof item.component !== 'function') {
       item.component = Registry.get(item.key);
       if (!item.component) {
@@ -334,6 +343,7 @@ export default class ReactForm extends React.Component {
         case 'ThreeColumnRow':
           return this.getContainerElement(item, ThreeColumnRow);
         case 'TwoColumnRow':
+          console.log('TwoColumnRow :>> ', item);
           return this.getContainerElement(item, TwoColumnRow);
         case 'Signature':
           return <Signature ref={c => this.inputs[item.field_name] = c} read_only={this.props.read_only || item.readOnly} mutable={true} key={`form_${item.id}`} data={item} defaultValue={this._getDefaultValue(item)} />;
@@ -353,8 +363,10 @@ export default class ReactForm extends React.Component {
     const formTokenStyle = {
       display: 'none',
     };
-
+    
+console.log('items formmm :>> ', items);
     const findTabs = items.find(d => d.type.name === `TwoColumnRow`)
+    const findIndex = items.findIndex(d => d.type.name === `TwoColumnRow`)
     
     console.log('findTabs :>> ', findTabs);
 
@@ -362,14 +374,11 @@ export default class ReactForm extends React.Component {
 
 const tabs=  <Tabs>
 <TabList>
-  <Tab>Title 1</Tab>
-  <Tab>Title 2</Tab>
+    {findTabs?.props?.controls && findTabs?.props?.data?.childNames ? findTabs?.props?.data?.childNames.map(el => <Tab>{ el}</Tab>):findTabs?.props?.data?.childItems.map((el,i) => <Tab>{ `Tab`+ i}</Tab>)}
 </TabList>
-
-  {findTabs.props.controls.map(el=><TabPanel>{el}</TabPanel>)}
-
+  {findTabs?.props?.controls&&findTabs.props.controls.map(el=><TabPanel>{el}</TabPanel>)}
 </Tabs>
-    items.push(tabs)
+    items.splice(findIndex,1,tabs)
     return (
       <div>
         <FormValidator emitter={this.emitter} />
