@@ -65,15 +65,16 @@ function isContainer(item) {
 
 const Dustbin = React.forwardRef(
   ({
-    greedy, isOver, isOverCurrent, connectDropTarget, items, col, getDataById, ...rest
-  }, ref) => {
-    const item = getDataById(items[col]);
+    greedy,lig, isOver, isOverCurrent, connectDropTarget, items, col, getDataById, ...rest
+  }, ref) => {    
+    const item = getDataById(Array.isArray(items[col]) ? items[col][lig]:items[col]);
+
     useImperativeHandle(
       ref,
       () => ({
-        onDrop: (/* dropped */) => {
-          // const { data } = dropped;
-          // console.log('onDrop', data);
+        onDrop: (/* dropped */ ) => {
+         /*  console.log('onDrop', dropped);
+          console.log('ref :>> ', ref); */
         },
       }),
       [],
@@ -88,7 +89,7 @@ const Dustbin = React.forwardRef(
     const element = getElement(item, rest);
     // console.log('accepts, canDrop', accepts, canDrop);
     return connectDropTarget(
-      <div style={getStyle(backgroundColor)}>
+      <div  style={getStyle(backgroundColor)}>
         {element}
       </div>,
     );
@@ -113,7 +114,7 @@ export default DropTarget(
         if (item.data && typeof props.setAsChild === 'function') {
           const isNew = !item.data.id;
           const data = isNew ? item.onCreate(item.data) : item.data;
-          props.setAsChild(props.data, data, props.col);
+          props.setAsChild(props.data, data, props.col,props.lig);
         }
       }
     },
