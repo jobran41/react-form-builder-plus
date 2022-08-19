@@ -1,16 +1,35 @@
-import SortableElement from './sortable-element';
-import PlaceHolder from './form-place-holder';
-import BaseFormElements from './form-elements';
-import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from './multi-column';
-import CustomElement from './form-elements/custom-element';
+import SortableElement from "./sortable-element";
+import PlaceHolder from "./form-place-holder";
+import BaseFormElements from "./form-elements";
+import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from "./multi-column";
+import CustomElement from "./form-elements/custom-element";
 
 const {
-  Header, Paragraph, Label, LineBreak, TextInput, NumberInput, TextArea, Dropdown, Checkboxes,
-  DatePicker, RadioButtons, Image, Rating, Tags, Signature, HyperLink, Download, Camera, Range,
+  Header,
+  Paragraph,
+  Label,
+  LineBreak,
+  TextInput,
+  NumberInput,
+  TextArea,
+  Dropdown,
+  Checkboxes,
+  DatePicker,
+  RadioButtons,
+  Image,
+  Rating,
+  Tags,
+  Signature,
+  HyperLink,
+  Download,
+  Camera,
+  Range,
+  CustomTabs,
 } = BaseFormElements;
 
 const FormElements = {};
 
+FormElements.CustomTabs = SortableElement(CustomTabs);
 FormElements.Header = SortableElement(Header);
 FormElements.Paragraph = SortableElement(Paragraph);
 FormElements.Label = SortableElement(Label);

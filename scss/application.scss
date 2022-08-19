@@ -12,3 +12,8 @@
 // Form builder styles
 @import "form-builder";
 @import "form-builder-form";
+@import "../node_modules/react-tabs/style/react-tabs.scss";
+
+.col-md-undefined {
+  display: none;
+}

@@ -13,7 +13,8 @@ import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from "./multi-column";
 import CustomElement from "./form-elements/custom-element";
 import Registry from "./stores/registry";
 
-const { Image, Checkboxes, Signature, Download, Camera } = FormElements;
+const { Image, Checkboxes, Signature, Download, Camera, CustomTabs } =
+  FormElements;
 
 export default class ReactForm extends React.Component {
   form;
@@ -280,13 +281,25 @@ export default class ReactForm extends React.Component {
   getContainerElement(item, Element) {
     /*     const controls = item.childItems.map(x => (x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>));
      */
+    const listComp = {
+      FourColumnRow: FourColumnRow,
+      TwoColumnRow: TwoColumnRow,
+      ThreeColumnRow: ThreeColumnRow,
+      FourColumnRow: FourColumnRow,
+    };
     const controls = item.childNames
       ? item.childItems.map(
           (el) =>
             el &&
             el.map((x) => {
+              const itemData = this.getDataById(x);
               return x ? (
-                this.getInputElement(this.getDataById(x))
+                itemData.isContainer ? (
+                  this.getContainerElement(itemData, listComp[itemData.element])
+                ) : (
+                  // this.getInputElement(itemData)
+                  this.getInputElement(itemData)
+                )
               ) : (
                 <div>&nbsp;</div>
               );
@@ -313,7 +326,6 @@ export default class ReactForm extends React.Component {
   }
 
   getCustomElement(item) {
-    z;
     if (!item.component || typeof item.component !== "function") {
       item.component = Registry.get(item.key);
       if (!item.component) {
@@ -365,7 +377,7 @@ export default class ReactForm extends React.Component {
           this.props.variables[item.variableKey];
       }
     });
-
+    console.log("data_items :>> ", data_items);
     const items = data_items
       .filter((x) => !x.parentId)
       .map((item) => {
@@ -384,11 +396,11 @@ export default class ReactForm extends React.Component {
           case "CustomElement":
             return this.getCustomElement(item);
           case "FourColumnRow":
+            console.log("item :>> FourColumnRow", item);
             return this.getContainerElement(item, FourColumnRow);
           case "ThreeColumnRow":
             return this.getContainerElement(item, ThreeColumnRow);
           case "TwoColumnRow":
-            console.log("TwoColumnRow :>> ", item);
             return this.getContainerElement(item, TwoColumnRow);
           case "Signature":
             return (
@@ -433,6 +445,8 @@ export default class ReactForm extends React.Component {
                 data={item}
               />
             );
+          case "CustomTabs":
+            return <CustomTabs />;
           case "Camera":
             return (
               <Camera
@@ -453,11 +467,8 @@ export default class ReactForm extends React.Component {
       display: "none",
     };
 
-    console.log("items formmm :>> ", items);
     const findTabs = items.find((d) => d.type.name === `TwoColumnRow`);
     const findIndex = items.findIndex((d) => d.type.name === `TwoColumnRow`);
-
-    console.log("findTabs :>> ", findTabs);
 
     const backName = this.props.back_name ? this.props.back_name : "Cancel";
 

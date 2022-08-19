@@ -58,15 +58,28 @@ export default class FormElementsEdit extends React.Component {
 
   onEditorStateChange(index, property, editorContent) {
     // const html = draftToHtml(convertToRaw(editorContent.getCurrentContent())).replace(/<p>/g, '<div>').replace(/<\/p>/g, '</div>');
-    if (property === `text`) {
-      const this_element = this.state.element;
+
+    const this_element = this.state.element;
+    if (property === "text") {
       this_element[property] = editorContent.target.value;
       this.setState({
         element: this_element,
         dirty: true,
       });
-    } else if (property === `childNames`) {
-      const this_element = this.state.element;
+    } else if (property === "customColumn") {
+      this_element[property] = editorContent;
+      this_element.childItems = editorContent.map(() => null);
+      this.setState({
+        element: this_element,
+        dirty: true,
+      });
+    } else if (property === "childItems") {
+      this_element[property] = editorContent;
+      this.setState({
+        element: this_element,
+        dirty: true,
+      });
+    } else if (property === "childNames") {
       this_element[property][index] = editorContent.target.value;
       this.setState({
         element: this_element,
@@ -78,7 +91,7 @@ export default class FormElementsEdit extends React.Component {
         .replace(/<\/p>/g, "")
         .replace(/&nbsp;/g, " ")
         .replace(/(?:\r\n|\r|\n)/g, " ");
-      const this_element = this.state.element;
+
       this_element[property] = html;
       this.setState({
         element: this_element,
@@ -126,7 +139,23 @@ export default class FormElementsEdit extends React.Component {
     }
   }
 
+  handleChangeGrid(property, val, index) {
+    const this_element = this.state.element;
+    this_element[property][index] = val;
+
+    /*     parentId: "563356F5-1A1E-4ED2-BB88-A10E01CE9E8E"
+    parentIndex: 0
+    col: 0 */
+
+    this.setState({
+      element: this_element,
+      dirty: true,
+    });
+    this.props.updateElementMove({ elm: this_element, val, index });
+  }
+
   render() {
+    console.log("object :>> ", this.state.element);
     if (this.state.dirty) {
       this.props.element.dirty = true;
     }
@@ -196,7 +225,7 @@ export default class FormElementsEdit extends React.Component {
     if (this.props.element.hasOwnProperty("label")) {
       editorState = this.convertFromHTML(this.props.element.label);
     }
-    console.log("this.state.element :>> ", this.state.element);
+
     return (
       <div>
         <div className="clearfix">
@@ -216,24 +245,18 @@ export default class FormElementsEdit extends React.Component {
           ></i>
         </div>
         {this.state.element.childNames &&
-          this.state.element.childNames.map((el, i) => {
-            return (
-              <div>
-                <label>Tabs {i}</label>
-                <input
-                  id="labelName"
-                  type="text"
-                  className="form-control"
-                  defaultValue={el}
-                  onChange={this.onEditorStateChange.bind(
-                    this,
-                    i,
-                    "childNames"
-                  )}
-                />
-              </div>
-            );
-          })}
+          this.state.element.childNames.map((el, i) => (
+            <div>
+              <label>Tabs {i}</label>
+              <input
+                id="labelName"
+                type="text"
+                className="form-control"
+                defaultValue={el}
+                onChange={this.onEditorStateChange.bind(this, i, "childNames")}
+              />
+            </div>
+          ))}
         {this.props.element.hasOwnProperty("content") && (
           <div className="form-group">
             <label className="control-label">Text to display:</label>
@@ -750,6 +773,332 @@ export default class FormElementsEdit extends React.Component {
               </div>
             </div>
           )}
+        {this.props.element.customColumn && (
+          <div aria-label="Layout floating controls">
+            <div
+              className="assistive"
+              role="status"
+              aria-atomic="true"
+              aria-relevant="all"
+              aria-live="polite"
+            >
+              <span>Floating toolbar controls have been opened</span>
+            </div>
+            <div
+              style={{
+                backgroundColor: "white",
+                borderRadius: "3px",
+                boxShadow: "grey",
+                padding: "4px 8px",
+                display: "flex",
+                lineHeight: 1,
+                boxSizing: " border-box",
+              }}
+              aria-label="Floating Toolbar"
+              className=" css-1x89713"
+            >
+              <div className="css-vxcmzt">
+                <div className="css-z25nd1">
+                  <div role="presentation">
+                    <div>
+                      <button
+                        aria-label="Two columns"
+                        aria-pressed="false"
+                        className="css-13ki9pu"
+                        data-testid="fabric.editor.twoColumns"
+                        type="button"
+                        onClick={this.onEditorStateChange.bind(
+                          this,
+                          0,
+                          "customColumn",
+                          [6, 6]
+                        )}
+                      >
+                        <span className="css-1ujqpe8">
+                          <span
+                            role="img"
+                            aria-label="Two columns"
+                            className="css-pxzk9z"
+                            // style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              role="presentation"
+                            >
+                              <path
+                                d="M5 5h5a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm9 0h5a1 1 0 011 1v12a1 1 0 01-1 1h-5a1 1 0 01-1-1V6a1 1 0 011-1z"
+                                fill="#3F6078"
+                                fillRule="evenodd"
+                              ></path>
+                            </svg>
+                          </span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="css-z25nd1">
+                <div role="presentation">
+                  <div>
+                    <button
+                      aria-label="Three columns"
+                      aria-pressed="false"
+                      className="css-13ki9pu"
+                      data-testid="fabric.editor.threeColumns"
+                      type="button"
+                      onClick={this.onEditorStateChange.bind(
+                        this,
+                        0,
+                        "customColumn",
+                        [4, 4, 4]
+                      )}
+                    >
+                      <span className="css-1ujqpe8">
+                        <span
+                          role="img"
+                          aria-label="Three columns"
+                          className="css-pxzk9z"
+                          //  style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M5 5h2a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm6 0h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V6a1 1 0 011-1zm6 0h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V6a1 1 0 011-1z"
+                              fill="#3F6078"
+                              fillRule="evenodd"
+                            ></path>
+                          </svg>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="css-z25nd1">
+                <div role="presentation">
+                  <div>
+                    <button
+                      aria-label="Right sidebar"
+                      aria-pressed="true"
+                      className="css-14hy36t"
+                      data-testid="fabric.editor.rightSidebar"
+                      type="button"
+                      onClick={this.onEditorStateChange.bind(
+                        this,
+                        0,
+                        "customColumn",
+                        [10, 2]
+                      )}
+                    >
+                      <span className="css-1ujqpe8">
+                        <span
+                          role="img"
+                          aria-label="Right sidebar"
+                          className="css-pxzk9z"
+                          //  style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M18 5h1a1 1 0 011 1v12a1 1 0 01-1 1h-1a1 1 0 01-1-1V6a1 1 0 011-1zM5 5h9a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"
+                              fill="#3F6078"
+                              fillRule="evenodd"
+                            ></path>
+                          </svg>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="css-z25nd1">
+                <div role="presentation">
+                  <div>
+                    <button
+                      aria-label="Left sidebar"
+                      aria-pressed="false"
+                      className="css-13ki9pu"
+                      data-testid="fabric.editor.leftSidebar"
+                      type="button"
+                      onClick={this.onEditorStateChange.bind(
+                        this,
+                        0,
+                        "customColumn",
+                        [2, 10]
+                      )}
+                    >
+                      <span className="css-1ujqpe8">
+                        <span
+                          role="img"
+                          aria-label="Left sidebar"
+                          className="css-pxzk9z"
+                          //  style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M5 5h1a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1zm5 0h9a1 1 0 011 1v12a1 1 0 01-1 1h-9a1 1 0 01-1-1V6a1 1 0 011-1z"
+                              fill="#3F6078"
+                              fillRule="evenodd"
+                            ></path>
+                          </svg>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="css-z25nd1">
+                <div role="presentation">
+                  <div>
+                    <button
+                      aria-label="Three columns with sidebars"
+                      aria-pressed="false"
+                      className="css-13ki9pu"
+                      data-testid="fabric.editor.threeColumnsWithSidebars"
+                      type="button"
+                      onClick={this.onEditorStateChange.bind(
+                        this,
+                        0,
+                        "customColumn",
+                        [2, 8, 2]
+                      )}
+                    >
+                      <span className="css-1ujqpe8">
+                        <span
+                          role="img"
+                          aria-label="Three columns with sidebars"
+                          className="css-pxzk9z"
+                          //  style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M5 5a1 1 0 011 1v12a1 1 0 01-2 0V6a1 1 0 011-1zm4 0h6a1 1 0 011 1v12a1 1 0 01-1 1H9a1 1 0 01-1-1V6a1 1 0 011-1zm10 0a1 1 0 011 1v12a1 1 0 01-2 0V6a1 1 0 011-1z"
+                              fill="#3F6078"
+                              fillRule="evenodd"
+                            ></path>
+                          </svg>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="css-z25nd1">
+                <div className="separator css-1eco9xy"></div>
+              </div>
+              <div className="css-z25nd1">
+                <div role="presentation">
+                  <div>
+                    <button
+                      aria-label="Remove"
+                      className="css-j4rl2i"
+                      data-testid="fabric.editor.remove"
+                      type="button"
+                      onClick={this.onEditorStateChange.bind(
+                        this,
+                        0,
+                        "customColumn",
+                        []
+                      )}
+                    >
+                      <span className="css-1ujqpe8">
+                        <span
+                          role="img"
+                          aria-label="Remove"
+                          className="css-pxzk9z"
+                          // style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M7 7h10a1 1 0 010 2H7a1 1 0 110-2zm2.78 11a1 1 0 01-.97-.757L7.156 10.62A.5.5 0 017.64 10h8.72a.5.5 0 01.485.621l-1.656 6.622a1 1 0 01-.97.757H9.781zM11 6h2a1 1 0 011 1h-4a1 1 0 011-1z"
+                              fill="#3F6078"
+                              fillRule="evenodd"
+                            ></path>
+                          </svg>
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                flexDirection: "column",
+              }}
+            >
+              {this.props.element.childItems.map((el, index) => {
+                return (
+                  <div className="col-lg-12 col-md-12 col-12">
+                    <div className="input-group mb-3">
+                      <div className="input-group-prepend">
+                        <select
+                          className="form-control select2bs4"
+                          name="country_code"
+                          id="country_code"
+                          style={{
+                            width: "100%",
+                          }}
+                          onChange={(e) =>
+                            this.handleChangeGrid(
+                              "childItems",
+                              e.target.value,
+                              index
+                            )
+                          }
+                        >
+                          <option value={null}>{"default"}</option>
+                          {this.state.data?.map((els) => {
+                            return (
+                              <option disabled={el} value={els.id}>
+                                {els.element}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <input
+                        disabled={el}
+                        value={el}
+                        onChange={this.handleChangeGrid}
+                        type="text"
+                        name="nestedContainer"
+                        className="form-control"
+                        placeholder="Select nested container"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
         {this.props.element.hasOwnProperty("options") && (
           <DynamicOptionList
             showCorrectColumn={this.props.showCorrectColumn}

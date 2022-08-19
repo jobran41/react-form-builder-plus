@@ -1,6 +1,6 @@
-import React from 'react';
-import store from './src/stores/store';
-import ReactFormGenerator from './src/form';
+import React from "react";
+import store from "./src/stores/store";
+import ReactFormGenerator from "./src/form";
 
 const answers = {};
 // const answers = {
@@ -28,7 +28,7 @@ export default class Demobar extends React.Component {
     const update = this._onChange.bind(this);
     this._onSubmit = this._onSubmit.bind(this);
 
-    store.subscribe(state => update(state.data));
+    store.subscribe((state) => update(state.data));
   }
 
   showPreview() {
@@ -70,32 +70,50 @@ export default class Demobar extends React.Component {
   }
 
   render() {
-    let modalClass = 'modal';
+    let modalClass = "modal";
     if (this.state.previewVisible) {
-      modalClass += ' show d-block';
+      modalClass += " show d-block";
     }
 
-    let shortModalClass = 'modal short-modal';
+    let shortModalClass = "modal short-modal";
     if (this.state.shortPreviewVisible) {
-      shortModalClass += ' show d-block';
+      shortModalClass += " show d-block";
     }
 
-    let roModalClass = 'modal ro-modal';
+    let roModalClass = "modal ro-modal";
     if (this.state.roPreviewVisible) {
-      roModalClass += ' show d-block';
+      roModalClass += " show d-block";
     }
 
     return (
-      <div className="clearfix" style={{ margin: '10px', width: '70%' }}>
+      <div className="clearfix" style={{ margin: "10px", width: "70%" }}>
         <h4 className="float-left">Preview</h4>
-        <button className="btn btn-primary float-right" style={{ marginRight: '10px' }} onClick={() => this.showPreview()}>Preview Form</button>
-        <button className="btn btn-default float-right" style={{ marginRight: '10px' }} onClick={() => this.showShortPreview()}>Alternate/Short Form</button>
-        <button className="btn btn-default float-right" style={{ marginRight: '10px' }} onClick={() => this.showRoPreview()}>Read Only Form</button>
+        <button
+          className="btn btn-primary float-right"
+          style={{ marginRight: "10px" }}
+          onClick={() => this.showPreview()}
+        >
+          Preview Form
+        </button>
+        {/*         <button
+          className="btn btn-default float-right"
+          style={{ marginRight: "10px" }}
+          onClick={() => this.showShortPreview()}
+        >
+          Alternate/Short Form
+        </button>
+        <button
+          className="btn btn-default float-right"
+          style={{ marginRight: "10px" }}
+          onClick={() => this.showRoPreview()}
+        >
+          Read Only Form
+        </button> */}
 
-        { this.state.previewVisible &&
+        {this.state.previewVisible && (
           <div className={modalClass} role="dialog">
             <div className="modal-dialog modal-lg" role="document">
-              <div className="modal-content">
+              <div className="modal-content container">
                 <ReactFormGenerator
                   download_path=""
                   back_action="/"
@@ -107,17 +125,25 @@ export default class Demobar extends React.Component {
                   // skip_validations={true}
                   // onSubmit={this._onSubmit}
                   variables={this.props.variables}
-                  data={this.state.data} />
+                  data={this.state.data}
+                />
 
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-default" data-dismiss="modal" onClick={this.closePreview.bind(this)}>Close</button>
+                  <button
+                    type="button"
+                    className="btn btn-default"
+                    data-dismiss="modal"
+                    onClick={this.closePreview.bind(this)}
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-        }
+        )}
 
-        { this.state.roPreviewVisible &&
+        {/*  { this.state.roPreviewVisible &&
           <div className={roModalClass}>
             <div className="modal-dialog modal-lg">
               <div className="modal-content">
@@ -163,7 +189,7 @@ export default class Demobar extends React.Component {
               </div>
             </div>
           </div>
-        }
+        } */}
       </div>
     );
   }

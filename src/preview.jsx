@@ -144,12 +144,11 @@ export default class Preview extends React.Component {
   }
 
   setAsChild(item, child, col, lig) {
-    console.log("item, child, col, lig :>> ", item, child, col, lig);
     const { data } = this.state;
     if (this.swapChildren(data, item, child, col)) {
       return;
     }
-    console.log("item, child, col ,lig :>> ", item, child, col, lig);
+
     const oldParent = this.getDataById(child.parentId);
     const oldCol = child.col;
     if (item.childNames && Array.isArray(item.childNames)) {
@@ -195,7 +194,6 @@ export default class Preview extends React.Component {
   removeChild(item, col, lig) {
     const { data } = this.state;
     if (item.childNames && Array.isArray(item.childNames)) {
-      console.log("item, col,lig :>> ", item, col, lig);
       const oldId = item.childItems[col][lig];
       const oldItem = this.getDataById(oldId);
       if (oldItem) {
@@ -285,7 +283,7 @@ export default class Preview extends React.Component {
         item.component = this.props.registry.get(item.key);
       }
     }
-    console.log("getElement :>> ", item, index);
+    console.log("item :>> ", item.element);
     const SortableFormElement = SortableFormElements[item.element];
 
     if (SortableFormElement === null) {
@@ -313,6 +311,22 @@ export default class Preview extends React.Component {
     );
   }
 
+  updateElementMove({ elm, val, index }, datas) {
+    console.log("elm,val,index :>> ", elm, val, index, datas);
+
+    /*    const findElm = datas.findIndex((el) => el.id === val);
+
+     const data = datas.splice(findElm, 1, {
+       parentId: elm.id,
+       parentIndex: 0,
+       col: index,
+     });
+     console.log("data :>> ", data);
+     this.setState({
+       data,
+     }); */
+  }
+
   showEditForm() {
     const handleUpdateElement = (element) => this.updateElement(element);
     handleUpdateElement.bind(this);
@@ -324,8 +338,14 @@ export default class Preview extends React.Component {
       preview: this,
       element: this.props.editElement,
       updateElement: handleUpdateElement,
+      updateElementMove: ({ elm, val, index }) => {
+        const child = this.state.data.find((el) => el.id === val);
+        this.setAsChild(elm, child, index);
+      },
+      data: this.state.data.filter(
+        (d) => d !== undefined && this.props.editElement.id !== d.id
+      ),
     };
-
     return this.props.renderEditForm(formElementEditProps);
   }
 
@@ -335,7 +355,11 @@ export default class Preview extends React.Component {
       classes += " is-editing";
     }
     const data = this.state.data.filter((x) => !!x && !x.parentId);
-    const items = data.map((item, index) => this.getElement(item, index));
+    const items = data.map((item, index) => {
+      console.log("item :>> ", item);
+      return this.getElement(item, index);
+    });
+    console.log("items :>> ", items);
     return (
       <div className={classes}>
         <div className="edit-form" ref={this.editForm}>
