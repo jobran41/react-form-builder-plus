@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React from "react";
+import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 
 import ComponentHeader from "../form-elements/component-header";
 import ComponentLabel from "../form-elements/component-label";
@@ -27,6 +28,7 @@ class MultiColumnRow extends React.Component {
       className,
       index,
       customColumn,
+      children,
     } = this.props;
     const { childItems, pageBreakBefore, childNames } = data;
     let baseClasses = "SortableItem rfb-item";
@@ -35,70 +37,113 @@ class MultiColumnRow extends React.Component {
     }
 
     /*  [0, 1, 2].forEach(this.logArrayElements); */
+
     return (
       <div className={baseClasses}>
         <ComponentHeader {...this.props} />
         <div>
           <ComponentLabel {...this.props} />
-          <div className="row">
-            {childNames
-              ? childItems.map((de, l) => (
-                  <div key={`${l}_key`} className={`${className} col${l}`}>
-                    {de &&
-                      de.map((x, i) => (
-                        <div
-                          key={`${i}_${x || "_"}${l}`}
-                          className={`${"lig-"}${i}`}
-                        >
-                          {controls ? (
-                            controls[l][i]
-                          ) : (
-                            <Dustbin
-                              style={{ width: "100%" }}
-                              data={data}
-                              accepts={accepts}
-                              items={childItems}
-                              col={l}
-                              lig={i}
-                              parentIndex={index}
-                              editModeOn={editModeOn}
-                              _onDestroy={() => removeChild(data, l, i)}
-                              getDataById={getDataById}
-                              setAsChild={setAsChild}
-                              seq={seq}
-                            />
-                          )}
-                        </div>
-                      ))}
-                  </div>
-                ))
-              : childItems.map((x, i) => (
-                  <div
-                    key={`${i}_${x || "_"}`}
-                    className={
-                      customColumn ? `col-md-${customColumn[i]}` : className
-                    }
-                  >
-                    {controls ? (
-                      controls[i]
-                    ) : (
-                      <Dustbin
-                        style={{ width: "100%" }}
-                        data={data}
-                        accepts={accepts}
-                        items={childItems}
-                        col={i}
-                        parentIndex={index}
-                        editModeOn={editModeOn}
-                        _onDestroy={() => removeChild(data, i)}
-                        getDataById={getDataById}
-                        setAsChild={setAsChild}
-                        seq={seq}
-                      />
-                    )}
-                  </div>
-                ))}
-          </div>
+          {children && (
+            <Dustbin
+              style={{ width: "100%" }}
+              data={data}
+              accepts={accepts}
+              items={childItems}
+              col={null}
+              lig={null}
+              parentIndex={index}
+              editModeOn={editModeOn}
+              _onDestroy={() => removeChild(data, null, null)}
+              getDataById={getDataById}
+              setAsChild={setAsChild}
+              seq={seq}
+            >
+              {children}
+            </Dustbin>
+          )}
+          {!children && (
+            <div className="row">
+              {childNames ? (
+                <Tabs key={`key`}>
+                  <TabList>
+                    {childNames.map((de, l) => {
+                      return <Tab>{de}</Tab>;
+                    })}
+                  </TabList>
+                  {childItems.map((de, l) => {
+                    return (
+                      <TabPanel
+                        style={{
+                          width: "100%",
+                        }}
+                        className="row"
+                      >
+                        {de &&
+                          de.map((x, i) => (
+                            <div
+                              key={`${i}_${x || "_"}${l}`}
+                              className={
+                                customColumn
+                                  ? `col-md-${customColumn[i]}`
+                                  : className
+                              }
+                            >
+                              {controls ? (
+                                controls[l][i]
+                              ) : (
+                                <Dustbin
+                                  style={{ width: "100%" }}
+                                  data={data}
+                                  accepts={accepts}
+                                  items={childItems}
+                                  col={l}
+                                  lig={i}
+                                  parentIndex={index}
+                                  editModeOn={editModeOn}
+                                  _onDestroy={() => removeChild(data, l, i)}
+                                  getDataById={getDataById}
+                                  setAsChild={setAsChild}
+                                  seq={seq}
+                                />
+                              )}
+                            </div>
+                          ))}
+                      </TabPanel>
+                    );
+                  })}
+                </Tabs>
+              ) : (
+                childItems.map((x, i) => {
+                  return (
+                    <div
+                      key={`${i}_${x || "_"}`}
+                      className={
+                        customColumn ? `col-md-${customColumn[i]}` : className
+                      }
+                    >
+                      {controls ? (
+                        controls[i]
+                      ) : (
+                        <Dustbin
+                          style={{ width: "100%" }}
+                          data={data}
+                          accepts={accepts}
+                          items={childItems}
+                          col={i}
+                          parentIndex={index}
+                          editModeOn={editModeOn}
+                          _onDestroy={() => removeChild(data, i)}
+                          getDataById={getDataById}
+                          setAsChild={setAsChild}
+                          seq={seq}
+                        />
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -116,10 +161,18 @@ const TwoColumnRow = ({ data, class_name, ...rest }) => {
     data.isContainer = true;
     data.childNames = [null, null];
   }
-  return <MultiColumnRow {...rest} className={className} data={data} />;
+  return (
+    <MultiColumnRow
+      {...rest}
+      className={className}
+      data={data}
+      customColumn={data.customColumn}
+    />
+  );
 };
 
 const ThreeColumnRow = ({ data, class_name, ...rest }) => {
+  console.log("data :>> ", data);
   const className = class_name || "col-md-4";
 
   if (!data.childItems) {
@@ -127,7 +180,15 @@ const ThreeColumnRow = ({ data, class_name, ...rest }) => {
     data.childItems = [null, null, null];
     data.isContainer = true;
   }
-  return <MultiColumnRow {...rest} className={className} data={data} />;
+  data.isContainer = true;
+  return (
+    <MultiColumnRow
+      children={"children"}
+      {...rest}
+      className={className}
+      data={data}
+    />
+  );
 };
 
 const FourColumnRow = ({ data, class_name, ...rest }) => {
@@ -137,13 +198,13 @@ const FourColumnRow = ({ data, class_name, ...rest }) => {
     data.childItems = [null, null, null, null];
     data.isContainer = true;
   }
-
+  data.isContainer = true;
   return (
     <MultiColumnRow
       {...rest}
       className={className}
       data={data}
-      customColumn={data.customColumn}
+      customColumn={data?.customColumn}
     />
   );
 };

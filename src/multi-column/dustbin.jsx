@@ -3,6 +3,8 @@ import { DropTarget } from "react-dnd";
 import FormElements from "../form-elements";
 import ItemTypes from "../ItemTypes";
 
+import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from ".";
+
 import CustomElement from "../form-elements/custom-element";
 import Registry from "../stores/registry";
 
@@ -23,8 +25,54 @@ function getCustomElement(item, props) {
   );
 }
 
+function getContainerElement(item) {
+  const listComp = {
+    FourColumnRow,
+    TwoColumnRow,
+    ThreeColumnRow,
+  };
+
+  const Elmt = listComp[item.element];
+
+  return (
+    <div className="nestedDrogDrop">
+      {/*    <FourColumnRow
+        editModeOn={item.restFn.editModeOn}
+        getDataById={item.restFn.getDataById}
+        _onDestroy={item.restFn._onDestroy}
+        setAsChild={item.restFn.setAsChild}
+        children={
+          <Elmt
+            editModeOn={item.restFn.editModeOn}
+            getDataById={item.restFn.getDataById}
+            _onDestroy={item.restFn._onDestroy}
+            setAsChild={item.restFn.setAsChild}
+            data={{ ...item }}
+          />
+        }
+        data={{ ...item }}
+      /> */}
+      <Elmt
+        editModeOn={item.restFn.editModeOn}
+        getDataById={item.restFn.getDataById}
+        _onDestroy={item.restFn._onDestroy}
+        removeChild={item.restFn._onDestroy}
+        setAsChild={item.restFn.setAsChild}
+        data={{ ...item, isNested: true }}
+      />
+    </div>
+  );
+}
+
+const listComp = {
+  FourColumnRow,
+  TwoColumnRow,
+  ThreeColumnRow,
+};
+
 function getElement(item, props) {
   if (!item) return null;
+
   const Element = item.custom
     ? () => getCustomElement(item, props)
     : FormElements[item.element || item.key];
@@ -49,7 +97,6 @@ function getStyle(backgroundColor) {
 }
 
 function isContainer(item) {
-  console.log("item :>> ", item);
   if (item.itemType !== ItemTypes.CARD) {
     const { data } = item;
     if (data) {
@@ -64,6 +111,31 @@ function isContainer(item) {
   return false;
 }
 
+function isContainerOfContainer(item) {
+  let isWrapContainer = [];
+  if (isContainer(item)) {
+    isWrapContainer =
+      item.data.childItems &&
+      item.data.childItems.map((el) => {
+        if (el) {
+          const nestedItem = item.getDataById(el);
+          return isContainer({ data: nestedItem });
+        }
+        return null;
+      });
+  }
+
+  const emptyCell = item.data.childItems[item.col];
+  console.log("emptyCell :>> ", emptyCell);
+  const result =
+    emptyCell === null
+      ? false
+      : isWrapContainer
+      ? isWrapContainer.filter((d) => d !== null && d).length !== 0
+      : isWrapContainer;
+
+  return result;
+}
 const Dustbin = React.forwardRef(
   (
     {
@@ -74,6 +146,7 @@ const Dustbin = React.forwardRef(
       connectDropTarget,
       items,
       col,
+      children,
       getDataById,
       ...rest
     },
@@ -99,12 +172,20 @@ const Dustbin = React.forwardRef(
     if (isOverCurrent || (isOver && greedy)) {
       backgroundColor = "darkgreen";
     }
-
-    const element = getElement(item, rest);
-    // console.log('accepts, canDrop', accepts, canDrop);
-    return connectDropTarget(
-      <div style={getStyle(backgroundColor)}>{element}</div>
+    console.log("item :>> getContainerElement", item);
+    const element = item?.customColumn ? (
+      getContainerElement(
+        { ...item, restFn: { ...rest, getDataById } },
+        listComp[item.element]
+      )
+    ) : (
+      <div className="jobran" style={getStyle(backgroundColor)}>
+        {getElement(item, rest)}
+        {children}
+      </div>
     );
+    // console.log('accepts, canDrop', accepts, canDrop);
+    return connectDropTarget(element);
   }
 );
 
@@ -117,12 +198,16 @@ export default DropTarget(
       }
 
       const item = monitor.getItem();
+      console.log(
+        "!isContainerOfContainer(props) :>> ",
+        !isContainerOfContainer(props)
+      );
 
-      if (!isContainer(item)) {
-        component.onDrop(item);
-        if (item.data && typeof props.setAsChild === "function") {
-          const isNew = !item.data.id;
-          const data = isNew ? item.onCreate(item.data) : item.data;
+      component.onDrop(item);
+      if (item.data && typeof props.setAsChild === "function") {
+        const isNew = !item.data.id;
+        const data = isNew ? item.onCreate(item.data) : item.data;
+        if (!isContainerOfContainer(props)) {
           props.setAsChild(props.data, data, props.col, props.lig);
         }
       }

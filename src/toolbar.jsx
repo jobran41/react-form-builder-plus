@@ -127,6 +127,7 @@ export default class Toolbar extends React.Component {
         label: "",
         icon: "fas fa-columns",
         field_name: "two_col_row_",
+        customColumn: [12, 12],
       },
       {
         key: "ThreeColumnRow",

@@ -5,7 +5,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { EventEmitter } from "fbemitter";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import FormValidator from "./form-validator";
 import FormElements from "./form-elements";
@@ -282,34 +281,44 @@ export default class ReactForm extends React.Component {
     /*     const controls = item.childItems.map(x => (x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>));
      */
     const listComp = {
-      FourColumnRow: FourColumnRow,
-      TwoColumnRow: TwoColumnRow,
-      ThreeColumnRow: ThreeColumnRow,
-      FourColumnRow: FourColumnRow,
+      FourColumnRow,
+      TwoColumnRow,
+      ThreeColumnRow,
     };
-    const controls = item.childNames
-      ? item.childItems.map(
-          (el) =>
-            el &&
-            el.map((x) => {
-              const itemData = this.getDataById(x);
-              return x ? (
-                itemData.isContainer ? (
-                  this.getContainerElement(itemData, listComp[itemData.element])
-                ) : (
-                  // this.getInputElement(itemData)
-                  this.getInputElement(itemData)
-                )
-              ) : (
-                <div>&nbsp;</div>
-              );
-            })
-        )
-      : item.childItems.map((x) =>
-          x ? this.getInputElement(this.getDataById(x)) : <div>&nbsp;</div>
-        );
 
-    console.log("controls controlscontrolscontrolscontrols :>> ", controls);
+    const controls = item.childNames
+      ? item.childItems.map((el) =>
+          el.map((x) => {
+            const itemData = this.getDataById(x);
+            return x ? (
+              <div>
+                {itemData.isContainer
+                  ? this.getContainerElement(
+                      itemData,
+                      listComp[itemData.element]
+                    )
+                  : // this.getInputElement(itemData)
+                    this.getInputElement(itemData)}
+              </div>
+            ) : (
+              <div>&nbsp;</div>
+            );
+          })
+        )
+      : (item?.childItems || []).map((x) => {
+          const itemData = this.getDataById(x);
+          return x ? (
+            <div>
+              {itemData.isContainer
+                ? this.getContainerElement(itemData, listComp[itemData.element])
+                : // this.getInputElement(itemData)
+                  this.getInputElement(itemData)}
+            </div>
+          ) : (
+            <div>&nbsp;</div>
+          );
+        });
+
     return (
       <Element
         mutable={true}
@@ -396,7 +405,6 @@ export default class ReactForm extends React.Component {
           case "CustomElement":
             return this.getCustomElement(item);
           case "FourColumnRow":
-            console.log("item :>> FourColumnRow", item);
             return this.getContainerElement(item, FourColumnRow);
           case "ThreeColumnRow":
             return this.getContainerElement(item, ThreeColumnRow);
@@ -467,25 +475,10 @@ export default class ReactForm extends React.Component {
       display: "none",
     };
 
-    const findTabs = items.find((d) => d.type.name === `TwoColumnRow`);
-    const findIndex = items.findIndex((d) => d.type.name === `TwoColumnRow`);
-
     const backName = this.props.back_name ? this.props.back_name : "Cancel";
 
-    const tabs = (
-      <Tabs>
-        <TabList>
-          {findTabs?.props?.controls && findTabs?.props?.data?.childNames
-            ? findTabs?.props?.data?.childNames.map((el) => <Tab>{el}</Tab>)
-            : findTabs?.props?.data?.childItems.map((el, i) => (
-                <Tab>{`Tab` + i}</Tab>
-              ))}
-        </TabList>
-        {findTabs?.props?.controls &&
-          findTabs.props.controls.map((el) => <TabPanel>{el}</TabPanel>)}
-      </Tabs>
-    );
-    items.splice(findIndex, 1, tabs);
+    //  items.splice(findIndex, 1, tabs);
+    console.log("items :>> ", items);
     return (
       <div>
         <FormValidator emitter={this.emitter} />

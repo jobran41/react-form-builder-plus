@@ -79,8 +79,34 @@ export default class FormElementsEdit extends React.Component {
         element: this_element,
         dirty: true,
       });
-    } else if (property === "childNames") {
-      this_element[property][index] = editorContent.target.value;
+    } else if (
+      property === "childNames" ||
+      property === "childNamesRows" ||
+      property === "childNamesColumn"
+    ) {
+      if (property === "childNamesRows") {
+        this_element.childNames = [
+          ...Array(Number(editorContent.target.value)).fill(null),
+        ];
+      }
+      if (property === "childNamesColumn") {
+        this_element.customColumn = [
+          ...Array(Number(editorContent.target.value)).fill(12),
+        ];
+      }
+
+      if (property === "childNames") {
+        this_element[property][index] = editorContent.target.value;
+      }
+
+      const arr2d = Array(this_element?.childNames.length)
+        .fill(null)
+        .map(() => Array(this_element?.customColumn.length).fill(null));
+
+      console.log("arr2d :>> ", arr2d);
+
+      this_element.childItems = arr2d;
+
       this.setState({
         element: this_element,
         dirty: true,
@@ -141,6 +167,9 @@ export default class FormElementsEdit extends React.Component {
 
   handleChangeGrid(property, val, index) {
     const this_element = this.state.element;
+    if (!this_element[property]) {
+      this_element[property] = [];
+    }
     this_element[property][index] = val;
 
     /*     parentId: "563356F5-1A1E-4ED2-BB88-A10E01CE9E8E"
@@ -155,7 +184,6 @@ export default class FormElementsEdit extends React.Component {
   }
 
   render() {
-    console.log("object :>> ", this.state.element);
     if (this.state.dirty) {
       this.props.element.dirty = true;
     }
@@ -244,6 +272,35 @@ export default class FormElementsEdit extends React.Component {
             onClick={this.props.manualEditModeOff}
           ></i>
         </div>
+
+        {this.state.element.childNames && (
+          <>
+            <label>Rows</label>
+            <input
+              id="labelName"
+              type="text"
+              className="form-control"
+              defaultValue={Number(this.props.element?.childNames?.length)}
+              onChange={this.onEditorStateChange.bind(
+                this,
+                "i",
+                "childNamesRows"
+              )}
+            />
+            <label>Column</label>
+            <input
+              id="labelName"
+              type="text"
+              className="form-control"
+              defaultValue={Number(this.props.element?.customColumn?.length)}
+              onChange={this.onEditorStateChange.bind(
+                this,
+                "i",
+                "childNamesColumn"
+              )}
+            />
+          </>
+        )}
         {this.state.element.childNames &&
           this.state.element.childNames.map((el, i) => (
             <div>
@@ -1067,7 +1124,7 @@ export default class FormElementsEdit extends React.Component {
                           }}
                           onChange={(e) =>
                             this.handleChangeGrid(
-                              "childItems",
+                              "nestedContainer",
                               e.target.value,
                               index
                             )

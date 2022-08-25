@@ -115,7 +115,6 @@ export default class Preview extends React.Component {
   }
 
   getDataById(id) {
-    console.log("id getDataById:>> ", id);
     const { data } = this.state;
     return data.find((x) => x && x.id === id);
   }
@@ -283,7 +282,7 @@ export default class Preview extends React.Component {
         item.component = this.props.registry.get(item.key);
       }
     }
-    console.log("item :>> ", item.element);
+
     const SortableFormElement = SortableFormElements[item.element];
 
     if (SortableFormElement === null) {
@@ -311,22 +310,6 @@ export default class Preview extends React.Component {
     );
   }
 
-  updateElementMove({ elm, val, index }, datas) {
-    console.log("elm,val,index :>> ", elm, val, index, datas);
-
-    /*    const findElm = datas.findIndex((el) => el.id === val);
-
-     const data = datas.splice(findElm, 1, {
-       parentId: elm.id,
-       parentIndex: 0,
-       col: index,
-     });
-     console.log("data :>> ", data);
-     this.setState({
-       data,
-     }); */
-  }
-
   showEditForm() {
     const handleUpdateElement = (element) => this.updateElement(element);
     handleUpdateElement.bind(this);
@@ -339,8 +322,12 @@ export default class Preview extends React.Component {
       element: this.props.editElement,
       updateElement: handleUpdateElement,
       updateElementMove: ({ elm, val, index }) => {
-        const child = this.state.data.find((el) => el.id === val);
-        this.setAsChild(elm, child, index);
+        const childIndex = this.state.data.findIndex((el) => el.id === val);
+        // this.setAsChild(elm, child, index);
+        const child = this.state.data[childIndex];
+        child["parentId"] = elm.id;
+        this.state.data.splice(childIndex, 1, child);
+        store.dispatch("updateOrder", this.state.data);
       },
       data: this.state.data.filter(
         (d) => d !== undefined && this.props.editElement.id !== d.id
@@ -356,7 +343,6 @@ export default class Preview extends React.Component {
     }
     const data = this.state.data.filter((x) => !!x && !x.parentId);
     const items = data.map((item, index) => {
-      console.log("item :>> ", item);
       return this.getElement(item, index);
     });
     console.log("items :>> ", items);

@@ -6,7 +6,7 @@ import ReactBootstrapSlider from "react-bootstrap-slider";
 import { Tabs, TabList, Tab, TabPanel } from "react-tabs";
 
 import StarRating from "./star-rating";
-import HeaderBar from "./header-bar";
+/* import HeaderBar from "./header-bar"; */
 import DatePicker from "./date-picker";
 import ComponentHeader from "./component-header";
 import ComponentLabel from "./component-label";
