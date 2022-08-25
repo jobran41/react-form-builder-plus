@@ -93,7 +93,7 @@ export default class Demobar extends React.Component {
           style={{ marginRight: "10px" }}
           onClick={() => this.showPreview()}
         >
-          Preview Form
+          Preview Forms
         </button>
         {/*         <button
           className="btn btn-default float-right"
