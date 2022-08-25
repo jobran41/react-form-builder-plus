@@ -3,10 +3,16 @@ import { DropTarget } from "react-dnd";
 import FormElements from "../form-elements";
 import ItemTypes from "../ItemTypes";
 
-import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from ".";
+import { TwoColumnRow, ThreeColumnRow, FourColumnRow } from "./MultiColumnRow";
 
 import CustomElement from "../form-elements/custom-element";
 import Registry from "../stores/registry";
+
+const listComp = {
+  FourColumnRow,
+  TwoColumnRow,
+  ThreeColumnRow,
+};
 
 function getCustomElement(item, props) {
   if (!item.component || typeof item.component !== "function") {
@@ -26,12 +32,6 @@ function getCustomElement(item, props) {
 }
 
 function getContainerElement(item) {
-  const listComp = {
-    FourColumnRow,
-    TwoColumnRow,
-    ThreeColumnRow,
-  };
-
   const Elmt = listComp[item.element];
 
   return (
@@ -63,12 +63,6 @@ function getContainerElement(item) {
     </div>
   );
 }
-
-const listComp = {
-  FourColumnRow,
-  TwoColumnRow,
-  ThreeColumnRow,
-};
 
 function getElement(item, props) {
   if (!item) return null;

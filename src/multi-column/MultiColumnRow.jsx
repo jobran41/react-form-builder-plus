@@ -172,7 +172,6 @@ const TwoColumnRow = ({ data, class_name, ...rest }) => {
 };
 
 const ThreeColumnRow = ({ data, class_name, ...rest }) => {
-  console.log("data :>> ", data);
   const className = class_name || "col-md-4";
 
   if (!data.childItems) {
