@@ -115,17 +115,28 @@ function isContainerOfContainer(item) {
   let isWrapContainer = [];
   if (isContainer(item)) {
     isWrapContainer =
-      item.data.childItems &&
-      item.data.childItems.map((el) => {
-        if (el) {
-          const nestedItem = item.getDataById(el);
-          return isContainer({ data: nestedItem });
-        }
-        return null;
-      });
+      item.data.childItems && Array.isArray(item.data.childItems[0])
+        ? item.data.childItems
+            .reduce((a, b) => a.concat(b))
+            .map((el) => {
+              if (el) {
+                const nestedItem = item.getDataById(el);
+                return isContainer({ data: nestedItem });
+              }
+              return null;
+            })
+        : item.data.childItems.map((el) => {
+            if (el) {
+              const nestedItem = item.getDataById(el);
+              return isContainer({ data: nestedItem });
+            }
+            return null;
+          });
   }
 
-  const emptyCell = item.data.childItems[item.col];
+  const emptyCell = Array.isArray(item.data.childItems[0])
+    ? item.data.childItems[item.col][item.lig]
+    : item.data.childItems[item.col];
   console.log("emptyCell :>> ", emptyCell);
   const result =
     emptyCell === null
@@ -198,11 +209,6 @@ export default DropTarget(
       }
 
       const item = monitor.getItem();
-      console.log(
-        "!isContainerOfContainer(props) :>> ",
-        !isContainerOfContainer(props)
-      );
-
       component.onDrop(item);
       if (item.data && typeof props.setAsChild === "function") {
         const isNew = !item.data.id;

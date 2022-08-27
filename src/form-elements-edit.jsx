@@ -1104,55 +1104,35 @@ export default class FormElementsEdit extends React.Component {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              style={{
-                flexDirection: "column",
-              }}
-            >
-              {this.props.element.childItems.map((el, index) => {
-                return (
-                  <div className="col-lg-12 col-md-12 col-12">
-                    <div className="input-group mb-3">
-                      <div className="input-group-prepend">
-                        <select
-                          className="form-control select2bs4"
-                          name="country_code"
-                          id="country_code"
-                          style={{
-                            width: "100%",
-                          }}
-                          onChange={(e) =>
-                            this.handleChangeGrid(
-                              "nestedContainer",
-                              e.target.value,
-                              index
-                            )
-                          }
+              <div className="css-z25nd2">
+                <div role="presentation">
+                  <div>
+                    <button
+                      aria-label="Remove"
+                      className="css-j4rl2i"
+                      data-testid="fabric.editor.remove"
+                      type="button"
+                      onClick={this.onEditorStateChange.bind(
+                        this,
+                        0,
+                        "customColumn",
+                        [12]
+                      )}
+                    >
+                      <span className="css-1ujqpe8">
+                        <span
+                          role="img"
+                          aria-label="Remove"
+                          className="css-pxzk9z"
+                          // style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
                         >
-                          <option value={null}>{"default"}</option>
-                          {this.state.data?.map((els) => {
-                            return (
-                              <option disabled={el} value={els.id}>
-                                {els.element}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                      <input
-                        disabled={el}
-                        value={el}
-                        onChange={this.handleChangeGrid}
-                        type="text"
-                        name="nestedContainer"
-                        className="form-control"
-                        placeholder="Select nested container"
-                      />
-                    </div>
+                          1
+                        </span>
+                      </span>
+                    </button>
                   </div>
-                );
-              })}
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -6,26 +6,26 @@ import { get, post } from "./requests";
 const getUrl = (cid) =>
   `https://safe-springs-35306.herokuapp.com/api/formdata?cid=${cid}`;
 
-// const content = [
-//   {
-//     id: 'C68B673B-3948-4D62-AF6D-5320CAB4DDB7',
-//     element: 'TextInput',
-//     text: 'Text Input',
-//     required: true,
-//     canHaveAnswer: true,
-//     field_name: 'text_input_EEA6F5DA-5C2C-43D3-AB62-62385E3925D9',
-//     label: '<div>Name</div>\n',
-//   },
-//   {
-//     id: '6DAF1E95-44F6-4E5B-ABDD-D9A6BCA2C08A',
-//     element: 'TextInput',
-//     text: 'Text Input',
-//     required: true,
-//     canHaveAnswer: true,
-//     field_name: 'text_input_C5305462-9704-4E77-BFAB-A43C14AB2B8E',
-//     label: '<div>Email</div>\n',
-//   },
-// ];
+const content = [
+  {
+    id: "C68B673B-3948-4D62-AF6D-5320CAB4DDB7",
+    element: "TextInput",
+    text: "Text Input",
+    required: true,
+    canHaveAnswer: true,
+    field_name: "text_input_EEA6F5DA-5C2C-43D3-AB62-62385E3925D9",
+    label: "<div>Name</div>\n",
+  },
+  {
+    id: "6DAF1E95-44F6-4E5B-ABDD-D9A6BCA2C08A",
+    element: "TextInput",
+    text: "Text Input",
+    required: true,
+    canHaveAnswer: true,
+    field_name: "text_input_C5305462-9704-4E77-BFAB-A43C14AB2B8E",
+    label: "<div>Email</div>\n",
+  },
+];
 
 class App extends React.Component {
   constructor(props) {
@@ -66,14 +66,15 @@ class App extends React.Component {
           value={this.state.formId}
           onChange={this.handleChange}
         >
-          <option value="1">Form 1</option>
-          <option value="2">Form 2</option>
+          <option value="1">Form Contact</option>
+          <option value="2">Form Agent</option>
         </select>
         <hr></hr>
         <ReactFormBuilder
-          // data={content}
+          //data={content}
           onLoad={this.onLoad}
           onPost={this.onPost}
+          // toolbarItems={items}
         />
         ,
       </div>
