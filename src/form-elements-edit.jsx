@@ -101,9 +101,7 @@ export default class FormElementsEdit extends React.Component {
 
       const arr2d = Array(this_element?.childNames.length)
         .fill(null)
-        .map(() => Array(this_element?.customColumn.length).fill(null));
-
-      console.log("arr2d :>> ", arr2d);
+        .map(() => Array(this_element?.customColumn ? this_element?.customColumn.length : this_element?.childNames.length).fill(null));
 
       this_element.childItems = arr2d;
 
@@ -273,7 +271,7 @@ export default class FormElementsEdit extends React.Component {
           ></i>
         </div>
 
-        {this.state.element.childNames && (
+        {(this.state.element.childNames && !this.state.element.type) && (
           <>
             <label>Rows</label>
             <input
@@ -301,7 +299,33 @@ export default class FormElementsEdit extends React.Component {
             />
           </>
         )}
-        {this.state.element.childNames &&
+        {this.state.element.type &&
+        <div>
+          <div>
+              <label>Accordion Name </label>
+              <input
+                id="labelName"
+                type="text"
+                className="form-control"
+                defaultValue={this.state.element.childNames && this.state.element.childNames[0]}
+                onChange={this.onEditorStateChange.bind(this, 0, "childNames")}
+              />
+            </div>
+          <label>Rows</label>
+            <input
+              id="labelName"
+              type="text"
+              className="form-control"
+              defaultValue={Number(this.props.element?.childNames?.length)}
+              onChange={this.onEditorStateChange.bind(
+                this,
+                "i",
+                "childNamesRows"
+              )}
+            />
+
+          </div>}
+        {(this.state.element.childNames && !this.state.element.type) &&
           this.state.element.childNames.map((el, i) => (
             <div>
               <label>Tabs {i}</label>
