@@ -243,5 +243,6 @@ const items = [{
 # Tests
 ```bash
 $ npm test
+npm run pretranspile && npm run prepublish
 ```
 Test is not working at this moment.
