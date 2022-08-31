@@ -5,6 +5,7 @@ import ComponentHeader from '../form-elements/component-header';
 import ComponentLabel from '../form-elements/component-label';
 import Dustbin from './dustbin';
 import ItemTypes from '../ItemTypes';
+import ID from '../UUID';
 
 const accepts = [ItemTypes.BOX, ItemTypes.CARD];
 
@@ -15,6 +16,7 @@ class MultiColumnRow extends React.Component {
 
   state = {
     active: 0,
+    currentAccrodion: '',
   };
 
   render() {
@@ -71,13 +73,36 @@ class MultiColumnRow extends React.Component {
                                     <div className="card">
                                       <div className="card-header" id="headingOne">
                                         <h2 className="mb-0">
-                                          <button className="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                          <button
+                                           onClick={() => {
+                                            if (
+                                              childNames[0] === this.state.currentAccrodion
+                                            ) {
+                                              this.setState({
+                                                accrodion: childNames[0],
+                                                currentAccrodion: ID.uuid(),
+                                              });
+                                            } else {
+                                              this.setState({
+                                                accrodion: childNames[0],
+                                                currentAccrodion: childNames[0],
+                                              });
+                                            }
+                                          }}
+                                          className="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                             {childNames && childNames[0]}
                                           </button>
                                         </h2>
                                       </div>
 
-                                      <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                      <div
+                                      className={`collapse ${
+                                        this.state.currentAccrodion === childNames[0]
+                                          ? 'show'
+                                          : ''
+                                      }`}
+                                      id="collapseOne"
+                                      aria-labelledby="headingOne" data-parent="#accordionExample">
                                         <div className="card-body">
                                         {childItems.map(
                       (de, l) => de &&
