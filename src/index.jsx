@@ -2,14 +2,16 @@
  * <ReactFormBuilder />
  */
 
-import React from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import Preview from "./preview";
-import Toolbar from "./toolbar";
-import ReactFormGenerator from "./form";
-import store from "./stores/store";
-import Registry from "./stores/registry";
+import React from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import Preview from './preview';
+import Toolbar from './toolbar';
+import ReactFormGenerator from './form';
+import store from './stores/store';
+import Registry from './stores/registry';
+
+import './style.scss';
 
 class ReactFormBuilder extends React.Component {
   constructor(props) {
