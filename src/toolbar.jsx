@@ -496,7 +496,7 @@ export default class Toolbar extends React.Component {
         </div>
         <ul
              style={{
-              height: "60%",
+              height: "300px",
               overflow:"auto"
             }}
         >
