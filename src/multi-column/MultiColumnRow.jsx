@@ -2,7 +2,8 @@
 import React from 'react';
 
 import ComponentHeader from '../form-elements/component-header';
-import ComponentLabel from '../form-elements/component-label';
+/* import ComponentLabel from '../form-elements/component-label'; */
+// eslint-disable-next-line import/no-cycle
 import Dustbin from './dustbin';
 import ItemTypes from '../ItemTypes';
 import ID from '../UUID';
@@ -43,7 +44,7 @@ class MultiColumnRow extends React.Component {
     return (
       <div className={baseClasses}>
         <ComponentHeader {...this.props} />
-        <div>
+        <div className="container">
           {/* <ComponentLabel {...this.props} /> */}
           {children && (
             <Dustbin
@@ -65,164 +66,186 @@ class MultiColumnRow extends React.Component {
           )}
           {!children && (
             <div className="row">
-              {childNames ? <> {type ? <div
-                   style={{
-                    width: '100%',
-                  }}
-              className="accordion" id="accordionExample">
-                                    <div className="card">
-                                      <div className="card-header" id="headingOne">
-                                        <h2 className="mb-0">
-                                          <button
-                                           onClick={() => {
-                                            if (
-                                              childNames[0] === this.state.currentAccrodion
-                                            ) {
-                                              this.setState({
-                                                accrodion: childNames[0],
-                                                currentAccrodion: ID.uuid(),
-                                              });
-                                            } else {
-                                              this.setState({
-                                                accrodion: childNames[0],
-                                                currentAccrodion: childNames[0],
-                                              });
-                                            }
-                                          }}
-                                          className="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            {childNames && childNames[0]}
-                                          </button>
-                                        </h2>
-                                      </div>
-
-                                      <div
-                                      className={`collapse ${
-                                        this.state.currentAccrodion === childNames[0]
-                                          ? 'show'
-                                          : ''
-                                      }`}
-                                      id="collapseOne"
-                                      aria-labelledby="headingOne" data-parent="#accordionExample">
-                                        <div className="card-body">
-                                        {childItems.map(
-                      (de, l) => de &&
-                        de.map((x, i) => (
-                          <div
-                            key={`${i}_${x || '_'}${l}`}
-                            id={`pills-${childNames && childNames[i]}`}
-                            role="tabpanel"
-                            aria-labelledby={`pills-${
-                              childNames && childNames[i]
-                            }-tab`}
-                            className={`${
-                              customColumn
-                                ? `col-md-${customColumn[i]} `
-                                : className
-                            }tab-pane fade  ${
-                              i === this.state.active ? 'active show' : ''
-                            }`}
-                          >
-                            {controls ? (
-                              controls[l][i]
-                            ) : (
-                              <Dustbin
-                                style={{ width: '100%' }}
-                                data={data}
-                                accepts={accepts}
-                                items={childItems}
-                                col={l}
-                                lig={i}
-                                parentIndex={index}
-                                editModeOn={editModeOn}
-                                _onDestroy={() => removeChild(data, l, i)}
-                                getDataById={getDataById}
-                                setAsChild={setAsChild}
-                                seq={seq}
-                              />
-                            )}
-                          </div>
-                        )),
-                    )}
-                                        </div>
-                                      </div>
-
-                                    </div>
-                                  </div>
-                                  :
+              {childNames ? (
                 <>
-                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                    {childNames.map((de, l) => (
-                      <li class="nav-item" role="presentation">
-                        <button
-                          className={`nav-link ${
-                            l === this.state.active ? 'active' : ''
+                  {' '}
+                  {type ? (
+                    <div
+                      style={{
+                        width: '100%',
+                      }}
+                      className="accordion"
+                      id="accordionExample"
+                    >
+                      <div className="card">
+                        <div className="card-header" id="headingOne">
+                          <h2 className="mb-0">
+                            <button
+                              onClick={() => {
+                                if (
+                                  childNames[0] === this.state.currentAccrodion
+                                ) {
+                                  this.setState({
+                                    accrodion: childNames[0],
+                                    currentAccrodion: ID.uuid(),
+                                  });
+                                } else {
+                                  this.setState({
+                                    accrodion: childNames[0],
+                                    currentAccrodion: childNames[0],
+                                  });
+                                }
+                              }}
+                              className="btn btn-link btn-block text-left"
+                              type="button"
+                              data-toggle="collapse"
+                              data-target="#collapseOne"
+                              aria-expanded="true"
+                              aria-controls="collapseOne"
+                            >
+                              {childNames && childNames[0]}
+                            </button>
+                          </h2>
+                        </div>
+
+                        <div
+                          className={`collapse ${
+                            this.state.currentAccrodion === childNames[0]
+                              ? 'show'
+                              : ''
                           }`}
-                          id={`pills-${de}-tab`}
-                          data-toggle="pill"
-                          data-target={`#pills-${de}`}
-                          type="button"
-                          role="tab"
-                          aria-controls={`pills-${de}`}
-                          aria-selected={l === this.state.active}
-                          onClick={() => {
-                            this.setState({ active: l });
-                          }}
+                          id="collapseOne"
+                          aria-labelledby="headingOne"
+                          data-parent="#accordionExample"
                         >
-                          {de}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                  <div
-                    className="tab-content"
-                    id="pills-tabContent"
-                    style={{
-                      width: '100%',
-                    }}
-                    className="row"
-                  >
-                    {childItems.map(
-                      (de, l) => de &&
-                        de.map((x, i) => (
-                          <div
-                            key={`${i}_${x || '_'}${l}`}
-                            id={`pills-${childNames && childNames[i]}`}
-                            role="tabpanel"
-                            aria-labelledby={`pills-${
-                              childNames && childNames[i]
-                            }-tab`}
-                            className={`${
-                              customColumn
-                                ? `col-md-${customColumn[i]} `
-                                : className
-                            }tab-pane fade  ${
-                              i === this.state.active ? 'active show' : ''
-                            }`}
-                          >
-                            {controls ? (
-                              controls[l][i]
-                            ) : (
-                              <Dustbin
-                                style={{ width: '100%' }}
-                                data={data}
-                                accepts={accepts}
-                                items={childItems}
-                                col={l}
-                                lig={i}
-                                parentIndex={index}
-                                editModeOn={editModeOn}
-                                _onDestroy={() => removeChild(data, l, i)}
-                                getDataById={getDataById}
-                                setAsChild={setAsChild}
-                                seq={seq}
-                              />
+                          <div className="card-body">
+                            {childItems.map(
+                              (de, l) => de &&
+                                de.map((x, i) => (
+                                  <div
+                                    key={`${i}_${x || '_'}${l}`}
+                                    id={`pills-${childNames && childNames[i]}`}
+                                    role="tabpanel"
+                                    aria-labelledby={`pills-${
+                                      childNames && childNames[i]
+                                    }-tab`}
+                                    className={`${
+                                      customColumn
+                                        ? `col-md-${customColumn[i]} `
+                                        : className
+                                    }tab-pane fade  ${
+                                      i === this.state.active
+                                        ? 'active show'
+                                        : ''
+                                    }`}
+                                  >
+                                    {controls ? (
+                                      controls[l][i]
+                                    ) : (
+                                      <Dustbin
+                                        style={{ width: '100%' }}
+                                        data={data}
+                                        accepts={accepts}
+                                        items={childItems}
+                                        col={l}
+                                        lig={i}
+                                        parentIndex={index}
+                                        editModeOn={editModeOn}
+                                        _onDestroy={() => removeChild(data, l, i)
+                                        }
+                                        getDataById={getDataById}
+                                        setAsChild={setAsChild}
+                                        seq={seq}
+                                      />
+                                    )}
+                                  </div>
+                                )),
                             )}
                           </div>
-                        )),
-                    )}
-                  </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <ul
+                        class="nav nav-pills mb-3"
+                        id="pills-tab"
+                        role="tablist"
+                      >
+                        {childNames.map((de, l) => (
+                          <li class="nav-item" role="presentation">
+                            <button
+                              className={`nav-link ${
+                                l === this.state.active ? 'active' : ''
+                              }`}
+                              id={`pills-${de}-tab`}
+                              data-toggle="pill"
+                              data-target={`#pills-${de}`}
+                              type="button"
+                              role="tab"
+                              aria-controls={`pills-${de}`}
+                              aria-selected={l === this.state.active}
+                              onClick={() => {
+                                this.setState({ active: l });
+                              }}
+                            >
+                              {de}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                      <div
+                        className="tab-content"
+                        id="pills-tabContent"
+                        style={{
+                          width: '100%',
+                        }}
+                        className="row"
+                      >
+                        {childItems.map(
+                          (de, l) => de &&
+                            de.map((x, i) => (
+                              <div
+                                key={`${i}_${x || '_'}${l}`}
+                                id={`pills-${childNames && childNames[i]}`}
+                                role="tabpanel"
+                                aria-labelledby={`pills-${
+                                  childNames && childNames[i]
+                                }-tab`}
+                                className={`${
+                                  customColumn
+                                    ? `col-md-${customColumn[i]} `
+                                    : className
+                                }tab-pane fade  ${
+                                  i === this.state.active ? 'active show' : ''
+                                }`}
+                              >
+                                {controls ? (
+                                  controls[l][i]
+                                ) : (
+                                  <Dustbin
+                                    style={{ width: '100%' }}
+                                    data={data}
+                                    accepts={accepts}
+                                    items={childItems}
+                                    col={l}
+                                    lig={i}
+                                    parentIndex={index}
+                                    editModeOn={editModeOn}
+                                    _onDestroy={() => removeChild(data, l, i)}
+                                    getDataById={getDataById}
+                                    setAsChild={setAsChild}
+                                    seq={seq}
+                                  />
+                                )}
+                              </div>
+                            )),
+                        )}
+                      </div>
+                    </>
+                  )}
                 </>
-  }</> : (
+              ) : (
                 childItems.map((x, i) => (
                   <div
                     key={`${i}_${x || '_'}`}
@@ -284,9 +307,7 @@ const ThreeColumnRow = ({ data, class_name, ...rest }) => {
 
   if (!data.childItems) {
     // eslint-disable-next-line no-param-reassign
-    data.childItems = [
-      [null],
-    ];
+    data.childItems = [[null]];
     data.childNames = [null];
     data.isContainer = true;
   }
@@ -296,7 +317,7 @@ const ThreeColumnRow = ({ data, class_name, ...rest }) => {
 
   return (
     <MultiColumnRow
-     // children={"children"}
+      // children={"children"}
       {...rest}
       className={className}
       type="accrodion"

@@ -854,7 +854,10 @@ export default class FormElementsEdit extends React.Component {
               </div>
             </div>
           )}
-        {this.props.element.customColumn && (
+        {this.props.element.customColumn &&
+        !this.state.element.childNames &&
+        !this.state.element.type &&
+        (
           <div aria-label="Layout floating controls">
             <div
               className="assistive"
@@ -1122,35 +1125,6 @@ export default class FormElementsEdit extends React.Component {
                               fillRule="evenodd"
                             ></path>
                           </svg>
-                        </span>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="css-z25nd2">
-                <div role="presentation">
-                  <div>
-                    <button
-                      aria-label="Remove"
-                      className="css-j4rl2i"
-                      data-testid="fabric.editor.remove"
-                      type="button"
-                      onClick={this.onEditorStateChange.bind(
-                        this,
-                        0,
-                        "customColumn",
-                        [12]
-                      )}
-                    >
-                      <span className="css-1ujqpe8">
-                        <span
-                          role="img"
-                          aria-label="Remove"
-                          className="css-pxzk9z"
-                          // style="--icon-primary-color:currentColor; --icon-secondary-color:var(--ds-surface, #FFFFFF);"
-                        >
-                          1
                         </span>
                       </span>
                     </button>
