@@ -478,10 +478,18 @@ export default class Toolbar extends React.Component {
     }
   };
 
-  componentDidUpdate(prevProps, prevState) {
+/*   componentDidUpdate(prevProps, prevState) {
     if (prevState.filterRes !== this.state.filterRes) {
       console.log('filterRes state has changed.');
       this.setState({ filterRes: this.state.filterRes });
+    }
+  } */
+
+  componentDidUpdate() {
+    if (this.state.items !== this.props.customItems) {
+      console.log('customItems state has changed.');
+      console.log('this.state.items !== this.props.customItems :>> ', this.state.items, this.props.customItems);
+      this.setState({ items: buildItems(this.props.customItems) });
     }
   }
 
@@ -516,15 +524,15 @@ export default class Toolbar extends React.Component {
               overflow: 'auto',
             }}
         >
-          {this.state.filterRes.length > 0 && this.state.filterRes.map((item) => (
+          {/* this.state.filterRes.length > 0 && this.state.filterRes.map((item) => (
             <ToolbarItem
               data={item}
               key={item.key}
               onClick={this._onClick.bind(this, item)}
               onCreate={this.create}
             />
-          ))}
-          { /* this.state.filterRes.length > 0 ? this.state.filterRes.map((item) => (
+          )) */}
+          {this.state.filterRes.length > 0 ? this.state.filterRes.map((item) => (
             <ToolbarItem
               data={item}
               key={item.key}
@@ -538,7 +546,7 @@ export default class Toolbar extends React.Component {
               onClick={this._onClick.bind(this, item)}
               onCreate={this.create}
             />
-          )) */}
+          )) }
         </ul>
       </div>
     );
