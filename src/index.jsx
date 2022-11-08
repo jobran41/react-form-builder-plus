@@ -84,6 +84,7 @@ class ReactFormBuilder extends React.Component {
               <Toolbar
                 {...toolbarProps}
                 customItems={this.props.customToolbarItems}
+                getFilterdResult={this.props.getFilterdResult}
               />
             </div>
           </div>
