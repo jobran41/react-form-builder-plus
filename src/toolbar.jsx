@@ -478,20 +478,29 @@ export default class Toolbar extends React.Component {
     }
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.filterRes !== this.state.filterRes) {
+      console.log('filterRes state has changed.');
+      this.setState({ filterRes: this.state.filterRes });
+    }
+  }
+
   render() {
     console.log('filterRes :>> ', this.state.filterRes);
+    console.log('filterRes :>> ', this.state.items);
+    console.log('this.state.filterRes.length > 0 :>> ', this.state.filterRes.length > 0);
     return (
       <div className="col-md-3 react-form-builder-toolbar float-right">
         <h4>Toolbox</h4>
         <div
         style={{
-          padding: "5px"
+          padding: '5px',
         }}
         class="input-group">
 
             <input
             style={{
-              width: "100%"
+              width: '100%',
             }}
                   type="text"
                   name="search"
@@ -503,8 +512,8 @@ export default class Toolbar extends React.Component {
         </div>
         <ul
              style={{
-              height: "300px",
-              overflow:"auto"
+              height: '300px',
+              overflow: 'auto',
             }}
         >
           { this.state.filterRes.length > 0 ? this.state.filterRes.map((item) => (
@@ -529,5 +538,5 @@ export default class Toolbar extends React.Component {
 }
 
 Toolbar.defaultProps = {
-  getFilterdResult: () => null
+  getFilterdResult: () => null,
 };
