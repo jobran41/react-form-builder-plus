@@ -31,7 +31,7 @@ export default class Toolbar extends React.Component {
   constructor(props) {
     super(props);
 
-    const items = buildItems(props.items, this._defaultItems());
+    const items = props.customItems ? buildItems(props.customItems) : buildItems(props.items, this._defaultItems());
     this.state = {
       items,
       isLoaded: false,
@@ -479,6 +479,7 @@ export default class Toolbar extends React.Component {
   };
 
   render() {
+    console.log('filterRes :>> ', this.state.filterRes);
     return (
       <div className="col-md-3 react-form-builder-toolbar float-right">
         <h4>Toolbox</h4>
