@@ -459,8 +459,18 @@ export default class Toolbar extends React.Component {
         filterRes: filterResult,
         isLoaded: true,
       });
+      this.props.getFilterdResult({
+        filterVal: event.target.value,
+        filterRes: filterResult,
+        isLoaded: true,
+      });
     } else {
       this.setState({
+        filterVal: event.target.value,
+        filterRes: this.state.items,
+        isLoaded: true,
+      });
+      this.props.getFilterdResult({
         filterVal: event.target.value,
         filterRes: this.state.items,
         isLoaded: true,
@@ -516,3 +526,7 @@ export default class Toolbar extends React.Component {
     );
   }
 }
+
+Toolbar.defaultProps = {
+  getFilterdResult: () => null
+};
