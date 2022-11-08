@@ -516,7 +516,15 @@ export default class Toolbar extends React.Component {
               overflow: 'auto',
             }}
         >
-          { this.state.filterRes.length > 0 ? this.state.filterRes.map((item) => (
+          {this.state.filterRes.length > 0 && this.state.filterRes.map((item) => (
+            <ToolbarItem
+              data={item}
+              key={item.key}
+              onClick={this._onClick.bind(this, item)}
+              onCreate={this.create}
+            />
+          ))}
+          { /* this.state.filterRes.length > 0 ? this.state.filterRes.map((item) => (
             <ToolbarItem
               data={item}
               key={item.key}
@@ -530,7 +538,7 @@ export default class Toolbar extends React.Component {
               onClick={this._onClick.bind(this, item)}
               onCreate={this.create}
             />
-          ))}
+          )) */}
         </ul>
       </div>
     );
