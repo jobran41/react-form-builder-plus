@@ -451,12 +451,8 @@ export default class Toolbar extends React.Component {
 
   searchChange = event => {
     if (event.target.value) {
-      const filterResult = this.state.items
-        .filter(el => (el.name
-            .toUpperCase()
-            .includes(event.target.value.toUpperCase())
-            ? el
-            : ''));
+      const val = event.target.value;
+      const filterResult = this.state.items.filter((el) => el.name.toUpperCase().includes(val.toUpperCase()));
 
       this.setState({
         filterVal: event.target.value,
