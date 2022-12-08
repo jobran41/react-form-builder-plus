@@ -12,7 +12,7 @@ export default class HeaderBar extends React.Component {
         <span className="badge badge-secondary">{this.props.data.text}</span>
         <div className="toolbar-header-buttons">
           {this.props.data.element !== "LineBreak" && (
-            <div
+            !this.props.data.required && <div
               className="btn is-isolated"
               onClick={this.props.editModeOn.bind(
                 this.props.parent,
@@ -22,12 +22,13 @@ export default class HeaderBar extends React.Component {
               <i className="is-isolated fas fa-edit"></i>
             </div>
           )}
-          <div
+          {!this.props.data.required && <div
             className="btn is-isolated"
             onClick={this.props.onDestroy.bind(this, this.props.data)}
           >
             <i className="is-isolated fas fa-trash"></i>
           </div>
+          }
           {!this.props.data.isContainer && (
             <Grip
               data={this.props.data}
