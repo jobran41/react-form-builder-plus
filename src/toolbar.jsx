@@ -487,7 +487,7 @@ export default class Toolbar extends React.Component {
 
 
  componentDidUpdate() {
-    if (this.props.customItems && this.state.items !== this.props.customItems) {
+    if (this.props.customItems && this.props.customItems.length > O && this.state.items.length !== this.props.customItems.length) {
       this.setState({ items: buildItems(this.props.customItems) });
     }
   }
